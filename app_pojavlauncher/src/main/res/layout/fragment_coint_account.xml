@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:fillViewport="true" android:background="@color/background_app">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:padding="24dp">
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="@string/coint_account" android:textColor="#00D4AD"
+            android:textSize="26sp" android:textStyle="bold" android:accessibilityHeading="true" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" android:text="@string/coint_account_description"
+            android:textColor="#A4B9C8" android:textSize="16sp" />
+        <TextView android:id="@+id/coint_account_status" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginTop="24dp"
+            android:textColor="#FFFFFF" android:textSize="16sp" android:accessibilityLiveRegion="polite" />
+        <EditText android:id="@+id/coint_login" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:minHeight="56dp" android:layout_marginTop="16dp"
+            android:hint="@string/coint_login_hint" android:inputType="textVisiblePassword"
+            android:autofillHints="username" android:maxLines="1" android:imeOptions="actionNext" />
+        <EditText android:id="@+id/coint_password" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:minHeight="56dp"
+            android:hint="@string/coint_password_hint" android:inputType="textPassword"
+            android:importantForAutofill="no" android:saveEnabled="false" android:maxLines="1" />
+        <ProgressBar android:id="@+id/coint_auth_progress" android:layout_width="40dp"
+            android:layout_height="40dp" android:layout_gravity="center_horizontal"
+            android:visibility="gone" android:layout_marginTop="12dp" />
+        <TextView android:id="@+id/coint_account_error" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:textColor="#FFAB91"
+            android:visibility="gone" android:layout_marginTop="12dp" android:accessibilityLiveRegion="polite" />
+        <Button android:id="@+id/coint_sign_in" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:minHeight="52dp" android:layout_marginTop="16dp"
+            android:text="@string/coint_sign_in" android:textAllCaps="false"
+            android:backgroundTint="#00D4AD" android:textColor="#041B17" />
+        <Button android:id="@+id/coint_restore" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:minHeight="52dp" android:visibility="gone"
+            android:text="@string/coint_restore" android:textAllCaps="false" />
+        <Button android:id="@+id/coint_sign_out" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:minHeight="52dp" android:visibility="gone"
+            android:text="@string/coint_sign_out" android:textAllCaps="false" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="20dp" android:text="@string/coint_account_game_pending"
+            android:textColor="#A4B9C8" android:textSize="14sp" />
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="coint_account">COINT account</string>
+    <string name="coint_account_named">COINT account: %1$s</string>
+    <string name="coint_account_description">Sign in with your COINT account username and password.</string>
+    <string name="coint_login_hint">Username</string>
+    <string name="coint_password_hint">Password</string>
+    <string name="coint_sign_in">Sign in to COINT</string>
+    <string name="coint_restore">Restore session</string>
+    <string name="coint_sign_out">Sign out</string>
+    <string name="coint_logout_confirm">Remove the saved COINT session from this device?</string>
+    <string name="coint_account_game_pending">This version supports COINT launcher sign-in. Launching the game with a COINT account is not available yet.</string>
+    <string name="coint_auth_busy">Connecting to COINT…</string>
+    <string name="coint_auth_signed_out">Not signed in.</string>
+    <string name="coint_auth_saved">Saved account: %1$s. Restore the session to verify sign-in.</string>
+    <string name="coint_auth_verified">Signed in as %1$s.</string>
+    <string name="coint_auth_credentials">Enter your username and password.</string>
+    <string name="coint_auth_bad_login">Incorrect username or password.</string>
+    <string name="coint_auth_blocked">This account is blocked.</string>
+    <string name="coint_auth_two_factor">This account requires additional verification, which is not supported by the mobile launcher yet.</string>
+    <string name="coint_auth_expired">The session is invalid. Sign out and sign in again.</string>
+    <string name="coint_auth_provider">The server did not offer a supported password sign-in method.</string>
+    <string name="coint_auth_network">Could not connect to COINT. Check your connection and try again.</string>
+    <string name="coint_auth_storage">Could not read or save the session. Remove it using Sign out, then sign in again.</string>
+    <string name="coint_auth_failed">Sign-in failed. The server rejected the request or returned an unsupported response.</string>
+    <string name="coint_microsoft_account">Microsoft account</string>
+    <string name="coint_local_account">Local account</string>
+</resources>

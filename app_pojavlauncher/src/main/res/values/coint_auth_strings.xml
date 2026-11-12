@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- COINT supports Russian and English. Other upstream locales use the Russian fallback. -->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="ru" tools:ignore="MissingTranslation">
+    <string name="coint_account">Аккаунт COINT</string>
+    <string name="coint_account_named">Аккаунт COINT: %1$s</string>
+    <string name="coint_account_description">Войдите с логином и паролем вашего аккаунта COINT.</string>
+    <string name="coint_login_hint">Логин</string>
+    <string name="coint_password_hint">Пароль</string>
+    <string name="coint_sign_in">Войти в COINT</string>
+    <string name="coint_restore">Восстановить сессию</string>
+    <string name="coint_sign_out">Выйти из аккаунта</string>
+    <string name="coint_logout_confirm">Удалить сохранённую сессию COINT с этого устройства?</string>
+    <string name="coint_account_game_pending">В этой версии вход COINT подключён к лаунчеру. Запуск игры с аккаунтом COINT пока недоступен.</string>
+    <string name="coint_auth_busy">Подключение к COINT…</string>
+    <string name="coint_auth_signed_out">Вход не выполнен.</string>
+    <string name="coint_auth_saved">Сохранён аккаунт: %1$s. Восстановите сессию для проверки входа.</string>
+    <string name="coint_auth_verified">Вы вошли как %1$s.</string>
+    <string name="coint_auth_credentials">Введите логин и пароль.</string>
+    <string name="coint_auth_bad_login">Неверный логин или пароль.</string>
+    <string name="coint_auth_blocked">Аккаунт заблокирован.</string>
+    <string name="coint_auth_two_factor">Для этого аккаунта нужна дополнительная проверка. Она пока не поддерживается в мобильном лаунчере.</string>
+    <string name="coint_auth_expired">Сессия недействительна. Выйдите из аккаунта и войдите снова.</string>
+    <string name="coint_auth_provider">Сервер не предложил поддерживаемый способ входа по паролю.</string>
+    <string name="coint_auth_network">Не удалось связаться с COINT. Проверьте подключение и повторите попытку.</string>
+    <string name="coint_auth_storage">Не удалось прочитать или сохранить сессию. Можно удалить её кнопкой выхода и войти снова.</string>
+    <string name="coint_auth_failed">Не удалось выполнить вход. Сервер отклонил запрос или прислал неподдерживаемый ответ.</string>
+    <string name="coint_microsoft_account">Аккаунт Microsoft</string>
+    <string name="coint_local_account">Локальный аккаунт</string>
+</resources>

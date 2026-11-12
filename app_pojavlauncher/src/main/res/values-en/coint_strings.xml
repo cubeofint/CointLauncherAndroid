@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="coint_title">COINT</string>
+    <string name="coint_subtitle">Minecraft Java on Android</string>
+    <string name="coint_gtnh_title">GT New Horizons</string>
+    <string name="coint_pack_missing">Import a COINT modpack, then select it below.</string>
+    <string name="coint_pack_ready">Ready to launch: %1$s</string>
+    <string name="coint_import_pack">Import modpack</string>
+    <string name="coint_java">Java and memory</string>
+    <string name="coint_controls">Configure controls</string>
+    <string name="coint_logs">Share log</string>
+    <string name="coint_files">Modpack files</string>
+    <string name="coint_about">About</string>
+    <string name="coint_play">Play</string>
+    <string name="coint_about_title">COINT Launcher 0.1.0</string>
+    <string name="coint_about_message">COINT mobile launcher based on Amethyst 1.1.7 and PojavLauncher.\n\nAmethyst source: github.com/AngelAuraMC/Amethyst-Android\nBase license: GNU LGPL v3. Original notices and component licenses are preserved.\n\nCOINT launcher sign-in and standard Minecraft/Microsoft sign-in are available. Game launch with COINT accounts and automatic modpack updates are not available yet.</string>
+    <string name="coint_import_complete">Modpack imported and selected for launch.</string>
+    <string name="coint_profile_settings">Profile settings</string>
+</resources>

@@ -48,6 +48,14 @@ public class MainMenuFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        view.findViewById(R.id.coint_account_button).setOnClickListener(v -> Tools.swapFragment(requireActivity(), CointAccountFragment.class, CointAccountFragment.TAG, null));
+        new androidx.lifecycle.ViewModelProvider(requireActivity())
+                .get(net.kdt.pojavlaunch.coint.auth.CointAccountModel.class)
+                .state().observe(getViewLifecycleOwner(), state -> {
+                    Button accountButton = view.findViewById(R.id.coint_account_button);
+                    accountButton.setText(state.username == null ? getString(R.string.coint_account)
+                            : getString(R.string.coint_account_named, state.username));
+                });
         Button mNewsButton = view.findViewById(R.id.news_button);
         Button mDiscordButton = view.findViewById(R.id.discord_button);
         Button mCustomControlButton = view.findViewById(R.id.custom_control_button);
