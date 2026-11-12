@@ -1,153 +1,46 @@
-<h1 align="center">Angel Aura Amethyst</h1>
+# COINT Launcher Android
 
-<img src="https://github.com/AngelAuraMC/Amethyst-Android/blob/v3_openjdk/app_pojavlauncher/src/main/assets/amethyst.png" align="left" width="130" height="130" alt="Amethyst logo">
+Отдельный Android-клиент COINT на основе [Amethyst 1.1.7](https://github.com/AngelAuraMC/Amethyst-Android/tree/1.1.7), коммит `56194e3d317a407c452dfc243722877bf552cf83`.
+Исходная история и LGPL-3.0 сохранены. Это ранняя версия, не официальный продукт AngelAuraMC.
 
-[![Android CI](https://github.com/AngelAuraMC/Amethyst-Android/workflows/Android%20CI/badge.svg)](https://github.com/AngelAuraMC/Amethyst-Android/actions)
-[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/AngelAuraMC/Amethyst-Android)](https://github.com/AngelAuraMC/Amethyst-Android/actions)
-[![Crowdin](https://badges.crowdin.net/pojavlauncher/localized.svg)](https://crowdin.com/project/pojavlauncher)
-[![Discord](https://img.shields.io/discord/724163890803638273.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/5ptqkyZxEy)
+## Первая версия
 
-*From [Boardwalk](https://github.com/zhuowei/Boardwalk)'s ashes and [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher)'s ruined reputation, here comes Amethyst!*
+- Отдельный package ID `ru.coint.launcher.debug`, интерфейс COINT и собственный значок; обычный Amethyst остаётся рядом.
+- Импорт локального `.mrpack`, автоматический выбор импортированного профиля.
+- Для GTNH с LWJGL3ify 3.x используется полный профиль из мода, без старого графического Forge installer.
+- При импорте применяются настройки Android: MobileGlues, отключение shared GL contexts, Linux desktop entry и загрузочных splash-экранов.
+- На первом старте heap 3072 МиБ для устройства с RAM от 6 ГБ; существующее пользовательское значение не перезаписывается.
+- Вход Minecraft/Microsoft остаётся штатным. Вход COINT и обновление из LaunchServer пока не реализованы: сначала нужны версия сервера и описание фактического протокола.
 
-Amethyst is a launcher that allows you to play Minecraft: Java Edition on your Android and [iOS](https://github.com/AngelAuraMC/Amethyst-iOS) devices.
+Аккаунты и токены других лаунчеров не копируются. Пакет сборки не включается в Git или APK и импортируется отдельно. Никаких коммитов, push или удалённого репозитория этот этап не создаёт.
 
-For more details, check out our [wiki](https://wiki.angelauramc.dev)!
+## Сборка на Windows
 
-## Table of Contents
+JDK 17, Android SDK Platform 34 и Build Tools 34.0.0; минимальная версия устройства — Android 10 (API 29), поддерживаемые ABI первой версии — ARM64 и x86_64. Android Studio открывает корень этого репозитория. Путь к SDK хранится только в игнорируемом `local.properties`.
 
-* [Introduction](#introduction)
-* [Getting Amethyst](#getting-amethyst)
-* [Building](#building)
-    * [Quick Build (Recommended)](#quick-build-recommended)
-    * [Detailed Build](#detailed-build)
-* [Current Status](#current-status)
-* [Known Issues](#known-issues)
-* [FAQ](#faq)
-* [Contributing](#contributing)
-* [Support](#support)
-* [License](#license)
-* [Credits & Dependencies](#credits--dependencies)
-* [Roadmap](#roadmap)
+Для разработки можно использовать неизменённый native engine из проверенного официального APK той же версии:
 
-## Introduction
+```powershell
+./scripts/Prepare-Engine.ps1
+./gradlew.bat :app_pojavlauncher:assembleDebug :app_pojavlauncher:testDebugUnitTest -PcointPrebuiltEngine=true
+```
 
-* Amethyst is a Minecraft: Java Edition launcher for Android and iOS based on [Boardwalk](https://github.com/zhuowei/Boardwalk) and [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher)
-* This launcher can launch almost all available Minecraft versions ranging from rd-132211 to 1.21 snapshots (including Combat Test versions)
-* Modding via Forge and Fabric are also supported.
-* This repository contains source code for Android. For iOS/iPadOS, check out [Amethyst-iOS](https://github.com/AngelAuraMC/Amethyst-iOS).
+Скрипт проверяет SHA-256 APK, извлекает только native libraries и runtime assets в `.vendor/`. Java-код и ресурсы приложения компилируются из этого репозитория. APK не переподписывается и не модифицируется вместо сборки исходников. Каталог `.vendor` не коммитится. Подготовленный режим намеренно привязан к исходникам 1.1.7; при обновлении движка нужны новые проверенные артефакты.
 
-## Getting Amethyst
+Обычный путь полной сборки native engine сохранён: инициализировать Git submodules, установить NDK версии из Gradle и собрать без `cointPrebuiltEngine`. Инструкции основы и лицензии зависимостей находятся в [README-UPSTREAM.md](README-UPSTREAM.md) и [LICENSE](LICENSE). Собственный production signing key не добавляется в репозиторий; первая сборка использует debug signing.
 
-You can get Amethyst via two methods:
+## Проверка
 
-1. **Releases:** Download the latest prebuilt app from [nightly.link](https://nightly.link/AngelAuraMC/Amethyst-Android/workflows/android/v3_openjdk/app-debug%20%28recommended%29.zip) or select an older version from our [automatic builds](https://github.com/AngelAuraMC/Amethyst-Android/actions).
-2. **Build from Source:** Follow the [building instructions](#building) below.
+Сначала на отдельном эмуляторе: запуск интерфейса, импорт подготовленного GTNH `.mrpack`, выбор профиля, отсутствие старого Forge installer, настройки рендера и памяти. Авторизацию пользователь выполняет самостоятельно. Затем проверяется запуск игры. Успех на x86_64-эмуляторе не подтверждает ARM-телефон, производительность мира или вход на сервер COINT.
 
-## Building
+Базовый пакет уже дошёл до главного меню GTNH (331 мод), Options и настроек Angelica на Android 17 x86_64: AVD 8 ГБ RAM, Java 25.0.5, heap 3072 МиБ, MobileGlues. Это проверка штатного Amethyst с пакетом, а не автоматическое подтверждение новой сборки COINT.
 
-### Quick Build (Recommended)
+Для APK COINT отдельно проверены старт главного экрана, память 3072 МиБ по умолчанию и два импорта малого пакета. Импорт создал профиль LWJGL3ify, выбрал MobileGlues, изменил пять параметров конфигурации и сразу обновил список и статус. Старый Forge installer не запускался. Это проверка импорта и интерфейса; полный GTNH в APK COINT ещё не запускался. Шесть unit-тестов проверяют точные правки конфигов и отказ от выхода ZIP-файлов за каталог импорта до изменения существующих файлов.
 
-The easiest way to build Amethyst is to use the pre-built JREs provided by our CI.
+Нативные библиотеки 1.1.7 на эмуляторе со страницами 16 КБ требуют системного режима совместимости. Их выравнивание в этом первом APK не изменено.
 
-1. Clone the repository: `git clone --recursive https://github.com/AngelAuraMC/Amethyst-Android.git`
-2. Build the launcher: `./gradlew :app_pojavlauncher:assembleDebug` (Use `gradlew.bat` on Windows)
+## Следующий этап: GravitLauncher
 
-The built APK will be located in `app_pojavlauncher/build/outputs/apk/debug/`.
+Пользователь подтвердил версию настольного клиента `5.7.9-1 stable`; версия LaunchServer ещё не установлена. Для изучения используется публичный tag `v5.7.9`, коммит `81132768a711a0eab0e8b3b8b6c480b90f48795c` репозитория GravitLauncher/Launcher. Этот код не включён в APK.
 
-### Detailed Build
-
-If you need more control over the build process, follow these steps:
-
-1. **Java Runtime Environment (JRE):** Download the `jre8-pojav` artifact from our [CI auto builds](https://github.com/AngelAuraMC/openjdk-build-multiarch/actions).  This package contains pre-built JREs for all supported architectures.  If you need to build the JRE yourself, follow the instructions in the [android-openjdk-build-multiarch](https://github.com/AngelAuraMC/openjdk-build-multiarch) repository.
-
-2. **LWJGL:** The build instructions for the custom LWJGL are available over the [LWJGL repository](https://github.com/AngelAuraMC/lwjgl3).
-
-3. **Language List:** Because languages are auto-added by Crowdin, you need to run the language list generator before building. In the project directory, run:
-   * Linux/macOS:
-     ```bash
-     chmod +x scripts/languagelist_updater.sh
-     bash scripts/languagelist_updater.sh
-     ```
-   * Windows:
-     ```batch
-     scripts\languagelist_updater.bat
-     ```
-
-4. **Build GLFW stub:** `./gradlew :jre_lwjgl3glfw:build`
-
-5. **Build the launcher:** `./gradlew :app_pojavlauncher:assembleDebug` (Replace `gradlew` with `gradlew.bat` on Windows).
-
-## Current Status
-
-* [x] OpenJDK 8 Mobile port: ARM32, ARM64, x86, x86_64
-* [x] OpenJDK 17 Mobile port: ARM32, ARM64, x86, x86_64
-* [x] OpenJDK 21 Mobile port: ARM32, ARM64, x86, x86_64
-* [x] Headless mod installer
-* [x] Mod installer with GUI
-* [x] OpenGL in OpenJDK environment
-* [x] OpenAL (works on most devices)
-* [x] Support for Minecraft 1.12.2 and below
-* [x] Support for Minecraft 1.13 and above
-* [x] Support for Minecraft 1.17 (22w13a) and above
-* [x] Game surface zooming
-* [x] New input pipe rewritten to native code
-* [x] Rewritten entire controls system
-* [ ] More to come!
-
-## Known Issues
-
-See our [issue tracker](https://github.com/AngelAuraMC/Amethyst-Android/issues) for a list of known issues and their current status.
-
-## FAQ
-
-See our [wiki](https://wiki.angelauramc.dev/) for more information.
-
-## Contributing
-
-Contributions are welcome! We welcome any type of contribution, not only code. For example, you can help improve the [wiki](https://github.com/AngelAuraMC/angelauramc.github.io/), contribute to the [translations](https://crowdin.com/project/pojavlauncher), or submit bug reports and feature requests.
-
-Any code change should be submitted as a pull request. The description should explain what the code does and give steps to execute it.
-
-## Support
-
-For support, please join our [Discord server](https://discord.gg/5ptqkyZxEy).
-
-## License
-
-Amethyst is licensed under [GNU LGPLv3](https://github.com/AngelAuraMC/Amethyst-Android/blob/v3_openjdk/LICENSE).
-
-## Credits & Dependencies
-
-* [Boardwalk](https://github.com/zhuowei/Boardwalk) (JVM Launcher): Unknown License/[Apache License 2.0](https://github.com/zhuowei/Boardwalk/blob/master/LICENSE) or GNU GPLv2.
-* [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher): [GLGPL](https://github.com/PojavLauncherTeam/PojavLauncher/blob/v3_openjdk/LICENSE)
-* Android Support Libraries: [Apache License 2.0](https://android.googlesource.com/platform/prebuilts/maven_repo/android/+/master/NOTICE.txt).
-* [GL4ES](https://github.com/AngelAuraMC/gl4es): [MIT License](https://github.com/ptitSeb/gl4es/blob/master/LICENSE).
-* [MobileGlues](https://github.com/MobileGL-Dev/MobileGlues): [LGPL-2.1 License](https://github.com/MobileGL-Dev/MobileGlues/blob/dev-es/LICENSE).
-* [Krypton Wrapper](https://github.com/BZLZHH/NG-GL4ES): [MIT License](https://github.com/BZLZHH/NG-GL4ES/blob/main/LICENSE)
-* [ANGLE](https://chromium.googlesource.com/angle/angle): [All Rights Reserved](app_pojavlauncher/src/main/assets/licenses/ANGLE_LICENSE).
-* [OpenJDK](https://github.com/AngelAuraMC/openjdk-multiarch-jdk8u): [GNU GPLv2 License](https://openjdk.java.net/legal/gplv2+ce.html).
-* [LWJGL3](https://github.com/AngelAuraMC/lwjgl3): [BSD-3 License](https://github.com/LWJGL/lwjgl3/blob/master/LICENSE.md).
-* [LWJGLX](https://github.com/AngelAuraMC/lwjglx) (LWJGL2 API compatibility layer for LWJGL3): unknown license.
-* [Mesa 3D Graphics Library](https://gitlab.freedesktop.org/mesa/mesa): [MIT License](https://docs.mesa3d.org/license.html).
-* [bhook](https://github.com/bytedance/bhook) (Used for exit code trapping): [MIT license](https://github.com/bytedance/bhook/blob/main/LICENSE).
-* [libepoxy](https://github.com/anholt/libepoxy): [MIT License](https://github.com/anholt/libepoxy/blob/master/COPYING).
-* [virglrenderer](https://github.com/AngelAuraMC/virglrenderer): [MIT License](https://gitlab.freedesktop.org/virgl/virglrenderer/-/blob/master/COPYING).
-* [OpenAL-Soft](https://github.com/kcat/openal-soft): [GNU GPLv2](app_pojavlauncher/src/main/assets/licenses/OPENAL-SOFT_GPL2)
-  * [oboe](https://github.com/google/oboe): [Apache License 2.0](app_pojavlauncher/src/main/assets/licenses/OBOE_APACHE2).
-  * [pfffft](https://bitbucket.org/jpommier/pffft/src/master/): [ARR](app_pojavlauncher/src/main/assets/licenses/PFFFT_LICENSE)
-* [SDL3](https://github.com/libsdl-org/SDL): [zlib License](https://github.com/libsdl-org/SDL/blob/main/LICENSE.txt)
-* [sdl2-compat](https://github.com/libsdl-org/sdl2-compat): [zlib License](https://github.com/libsdl-org/sdl2-compat/blob/main/LICENSE.txt)
-* Thanks to [MCHeads](https://mc-heads.net) for providing Minecraft avatars.
-
-## Roadmap
-
-We are currently focusing on:
-
-* Exploring new rendering technologies.
-
-Future plans include:
-
-* Improving stability and performance.
-* Enhancing the mod installation experience.
-
-We welcome community feedback and suggestions for our roadmap.  Please feel free to open a feature request in our [issue tracker](https://github.com/AngelAuraMC/Amethyst-Android/issues).
+Пользователь сообщил публичный адрес `wss://launcher.mawlee.org/api` и `launcher.experimentalDevOnlyHttpApi=false`. Анонимная проверка `getAvailabilityAuth` прошла: requestUUID совпал, доступен `std`, displayName `Default`, details `password`. Логин и пароль на сервер не отправлялись. Это проверка обнаружения способов входа, а не авторизации или Minecraft-сессии. Следующий этап — отдельный тип аккаунта COINT, обновление сессии и совместимая интеграция игрового authlib; стандартный вход Minecraft/Microsoft пока сохранён без изменений. Приватные серверные конфиги, ключи и SSH-доступ не использовались.

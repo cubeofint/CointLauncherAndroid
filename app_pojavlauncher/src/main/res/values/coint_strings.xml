@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="coint_title">COINT</string>
+    <string name="coint_subtitle">Minecraft Java на Android</string>
+    <string name="coint_gtnh_title">GT New Horizons</string>
+    <string name="coint_pack_missing">Импортируй пакет COINT, затем выбери его в списке ниже.</string>
+    <string name="coint_pack_ready">Готово к запуску: %1$s</string>
+    <string name="coint_import_pack">Импортировать сборку</string>
+    <string name="coint_java">Java и память</string>
+    <string name="coint_controls">Настроить управление</string>
+    <string name="coint_logs">Поделиться логом</string>
+    <string name="coint_files">Файлы сборки</string>
+    <string name="coint_about">О лаунчере</string>
+    <string name="coint_play">Играть</string>
+    <string name="coint_about_title">COINT Launcher 0.1.0</string>
+    <string name="coint_about_message">Мобильный лаунчер COINT на основе Amethyst 1.1.7 и PojavLauncher.\n\nИсходники Amethyst: github.com/AngelAuraMC/Amethyst-Android\nЛицензия основы: GNU LGPL v3. Исходные уведомления и лицензии компонентов сохранены.\n\nВ этой версии доступен стандартный вход Minecraft/Microsoft. Авторизация COINT и автоматическое обновление сборки ещё не подключены.</string>
+    <string name="coint_import_complete">Сборка импортирована и выбрана для запуска.</string>
+    <string name="coint_profile_settings">Настройки профиля</string>
+</resources>

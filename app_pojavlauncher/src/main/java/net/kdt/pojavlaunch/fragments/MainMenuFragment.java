@@ -43,7 +43,7 @@ public class MainMenuFragment extends Fragment {
     private mcVersionSpinner mVersionSpinner;
 
     public MainMenuFragment(){
-        super(R.layout.fragment_launcher);
+        super(R.layout.fragment_coint_launcher);
     }
 
     @Override
@@ -58,17 +58,21 @@ public class MainMenuFragment extends Fragment {
         ImageButton mEditProfileButton = view.findViewById(R.id.edit_profile_button);
         Button mPlayButton = view.findViewById(R.id.play_button);
         mVersionSpinner = view.findViewById(R.id.mc_version_spinner);
+        mVersionSpinner.setOnProfileSelectionChangedListener(this::updatePackStatus);
 
-        mNewsButton.setOnClickListener(v -> Tools.openURL(requireActivity(), Tools.URL_HOME));
-        mDiscordButton.setOnClickListener(v -> Tools.openURL(requireActivity(), getString(R.string.discord_invite)));
+        mNewsButton.setOnClickListener(v -> Tools.swapFragment(requireActivity(),
+                net.kdt.pojavlaunch.prefs.screens.LauncherPreferenceJavaFragment.class, "COINT_JAVA", null));
+        mDiscordButton.setOnClickListener(v -> new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.coint_about_title).setMessage(R.string.coint_about_message)
+                .setPositiveButton(android.R.string.ok, null).show());
         mCustomControlButton.setOnClickListener(v -> startActivity(new Intent(requireContext(), CustomControlsActivity.class)));
-        if (hasOnlineProfile()) {
-            mInstallJarButton.setOnClickListener(v -> runInstallerWithConfirmation(false));
-            mInstallJarButton.setOnLongClickListener(v -> {
-                runInstallerWithConfirmation(true);
-                return true;
-            });
-        } else mInstallJarButton.setOnClickListener(v -> hasNoOnlineProfileDialog(requireActivity()));
+        mInstallJarButton.setOnClickListener(v -> {
+            if (ProgressKeeper.getTaskCount() != 0) {
+                Toast.makeText(requireContext(), R.string.tasks_ongoing, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            ((net.kdt.pojavlaunch.LauncherActivity) requireActivity()).modpackImportLauncher.launch(null);
+        });
         mEditProfileButton.setOnClickListener(v -> mVersionSpinner.openProfileEditor(requireActivity()));
 
         mPlayButton.setOnClickListener(v -> {
@@ -97,10 +101,6 @@ public class MainMenuFragment extends Fragment {
         });
 
 
-        mNewsButton.setOnLongClickListener((v)->{
-            Tools.swapFragment(requireActivity(), GamepadMapperFragment.class, GamepadMapperFragment.TAG, null);
-            return true;
-        });
     }
 
     private File getCurrentProfileDirectory() {
@@ -115,7 +115,29 @@ public class MainMenuFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        refreshProfiles();
+    }
+
+    public void refreshProfiles() {
+        if (getView() == null || mVersionSpinner == null) return;
         mVersionSpinner.reloadProfiles();
+        String current = LauncherPreferences.DEFAULT_PREF.getString(LauncherPreferences.PREF_KEY_CURRENT_PROFILE, "");
+        int position = mVersionSpinner.getProfileAdapter().resolveProfileIndex(current);
+        if (position >= 0) mVersionSpinner.setProfileSelection(position);
+        else updatePackStatus();
+    }
+
+    private void updatePackStatus() {
+        if (getView() == null) return;
+        android.widget.TextView status = getView().findViewById(R.id.coint_pack_status);
+        try {
+            MinecraftProfile profile = LauncherProfiles.getCurrentProfile();
+            status.setText(profile.lastVersionId != null && profile.lastVersionId.contains("LWJGL3ify")
+                    ? getString(R.string.coint_pack_ready, profile.name)
+                    : getString(R.string.coint_pack_missing));
+        } catch (RuntimeException ignored) {
+            status.setText(R.string.coint_pack_missing);
+        }
     }
 
     private void runInstallerWithConfirmation(boolean isCustomArgs) {

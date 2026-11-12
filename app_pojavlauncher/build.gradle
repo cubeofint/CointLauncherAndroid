@@ -2,6 +2,14 @@ plugins {
     id 'com.android.application' version '8.7.2'
 }
 
+// Optional development build using the unchanged native engine from the pinned
+// upstream release. Java, resources and the COINT interface are compiled here.
+def prebuiltEngine = providers.gradleProperty('cointPrebuiltEngine').map { it.toBoolean() }.getOrElse(false)
+def engineDirectory = rootProject.file('.vendor/amethyst-1.1.7')
+if (prebuiltEngine && !new File(engineDirectory, 'engine-source.json').isFile()) {
+    throw new GradleException('Run scripts/Prepare-Engine.ps1 before using -PcointPrebuiltEngine=true')
+}
+
 static def getDate() { return new Date().format('yyyyMMdd') }
 
 def getVersionName = {
@@ -105,14 +113,17 @@ android {
     }
 
     defaultConfig {
-        applicationId "org.angelauramc.amethyst"
-        minSdkVersion 21
+        applicationId "ru.coint.launcher"
+        minSdkVersion 29
+        ndk {
+            abiFilters 'arm64-v8a', 'x86_64'
+        }
         targetSdkVersion 34
-        versionCode 10000000
-        versionName getVersionName()
+        versionCode 1
+        versionName "0.1.0"
         multiDexEnabled true //important
         resValue 'string', 'curseforge_api_key', getCFApiKey()
-        externalNativeBuild {
+        if (!prebuiltEngine) externalNativeBuild {
             ndkBuild {
                 // Fix for Windows command line length limit
                 arguments "APP_SHORT_COMMANDS=true"
@@ -127,11 +138,12 @@ android {
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.customDebug
-            resValue "string", "app_name", "Amethyst (Debug)"
-            resValue "string", "app_short_name", "Amethyst (Debug)"
-            resValue 'string', 'application_package', 'org.angelauramc.amethyst.debug'
-            resValue 'string', 'storageProviderAuthorities', 'org.angelauramc.amethyst.scoped.gamefolder.debug'
-            resValue 'string', 'shareProviderAuthority', 'org.angelauramc.amethyst.scoped.controlfolder.debug'
+            versionNameSuffix '-dev'
+            resValue "string", "app_name", "COINT Launcher (Dev)"
+            resValue "string", "app_short_name", "COINT"
+            resValue 'string', 'application_package', 'ru.coint.launcher.debug'
+            resValue 'string', 'storageProviderAuthorities', 'ru.coint.launcher.scoped.gamefolder.debug'
+            resValue 'string', 'shareProviderAuthority', 'ru.coint.launcher.scoped.controlfolder.debug'
         }
         proguard {
             initWith debug
@@ -151,10 +163,11 @@ android {
             // defaultConfig already set
             // multiDexEnabled = true
             // debuggable = true
-            resValue "string", "app_name", "Amethyst"
-            resValue "string", "app_short_name", "Amethyst"
-            resValue 'string', 'storageProviderAuthorities', 'org.angelauramc.amethyst.scoped.gamefolder'
-            resValue 'string', 'application_package', 'org.angelauramc.amethyst'
+            resValue "string", "app_name", "COINT Launcher"
+            resValue "string", "app_short_name", "COINT"
+            resValue 'string', 'storageProviderAuthorities', 'ru.coint.launcher.scoped.gamefolder'
+            resValue 'string', 'application_package', 'ru.coint.launcher'
+            resValue 'string', 'shareProviderAuthority', 'ru.coint.launcher.scoped.controlfolder'
         }
         gplay {
             initWith release
@@ -165,7 +178,7 @@ android {
 
     ndkVersion = "27.3.13750724"
 
-    externalNativeBuild {
+    if (!prebuiltEngine) externalNativeBuild {
         ndkBuild {
             path file('src/main/jni/Android.mk')
         }
@@ -193,20 +206,27 @@ android {
     }
 
     buildFeatures {
-        prefab true
+        prefab !prebuiltEngine
         buildConfig true
     }
 
     buildToolsVersion = '34.0.0'
+
+    if (prebuiltEngine) {
+        sourceSets.main.jniLibs.srcDirs = [new File(engineDirectory, 'jniLibs')]
+        sourceSets.main.assets.srcDirs = [new File(engineDirectory, 'assets')]
+        packagingOptions.jniLibs.keepDebugSymbols += ['**/*.so']
+    }
 }
 
-afterEvaluate {
+if (!prebuiltEngine) afterEvaluate {
     // Explicit dependencies for which the apk relies on
     tasks.mergeDebugAssets.dependsOn(":forge_installer:jar", ":arc_dns_injector:jar", ":methods_injector_agent:jar", ":jre_lwjgl3glfw:jar")
     tasks.mergeReleaseAssets.dependsOn(":forge_installer:jar", ":arc_dns_injector:jar", ":methods_injector_agent:jar", ":jre_lwjgl3glfw:jar")
 }
 
 dependencies {
+    testImplementation 'junit:junit:4.13.2'
     implementation 'javax.annotation:javax.annotation-api:1.3.2'
     implementation 'commons-codec:commons-codec:1.15'
     // implementation 'com.wu-man:android-bsf-api:3.1.3'

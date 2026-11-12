@@ -78,6 +78,7 @@ public class LauncherPreferences {
     public static void loadPreferences(Context ctx) {
         //Required for CTRLDEF_FILE and MultiRT
         Tools.initStorageConstants(ctx);
+        net.kdt.pojavlaunch.coint.CointBootstrap.initializeDefaults(ctx, DEFAULT_PREF);
         boolean isDevicePowerful = isDevicePowerful(ctx);
 
         PREF_BUTTONSIZE = DEFAULT_PREF.getInt("buttonscale", 100);

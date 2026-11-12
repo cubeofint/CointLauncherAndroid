@@ -57,6 +57,11 @@ public class mcVersionSpinner extends ExtendedTextView {
     private PopupWindow mPopupWindow = null;
     private Object mPopupAnimation;
     private int mSelectedIndex;
+    private Runnable mProfileSelectionListener;
+
+    public void setOnProfileSelectionChangedListener(Runnable listener) {
+        mProfileSelectionListener = listener;
+    }
 
     private final ProfileAdapter mProfileAdapter = new ProfileAdapter(new ProfileAdapterExtra[]{
             new ProfileAdapterExtra(VERSION_SPINNER_PROFILE_CREATE,
@@ -72,6 +77,7 @@ public class mcVersionSpinner extends ExtendedTextView {
                 .putString(LauncherPreferences.PREF_KEY_CURRENT_PROFILE,
                         mProfileAdapter.getItem(position).toString())
                 .apply();
+        if (mProfileSelectionListener != null) mProfileSelectionListener.run();
     }
 
     public void setSelection(int position){

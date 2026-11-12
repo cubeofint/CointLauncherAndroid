@@ -109,6 +109,12 @@ public class LauncherActivity extends BaseActivity {
                             }
                             ModLoader loaderInfo = new CommonApi(getString(R.string.curseforge_api_key)).importModpack(modpackFile);
                             modpackFile.delete();
+                            runOnUiThread(() -> {
+                                Tools.backToMainMenu(this);
+                                Fragment active = getSupportFragmentManager().findFragmentById(this.mFragmentView.getId());
+                                if (active instanceof MainMenuFragment) ((MainMenuFragment) active).refreshProfiles();
+                                Toast.makeText(this, R.string.coint_import_complete, Toast.LENGTH_LONG).show();
+                            });
                             if (loaderInfo == null) return;
                             loaderInfo.getDownloadTask(new NotificationDownloadListener(this, loaderInfo)).run();
                         } catch (IOException e) {

@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -38,15 +40,26 @@ public class ZipUtils {
      */
     public static void zipExtract(ZipFile zipFile, String dirName, File destination) throws IOException {
         Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
-
+        File root = destination.getCanonicalFile();
+        String rootPrefix = root.getPath() + File.separator;
+        Map<ZipEntry, File> outputs = new LinkedHashMap<>();
         int dirNameLen = dirName.length();
         while(zipEntries.hasMoreElements()) {
             ZipEntry zipEntry = zipEntries.nextElement();
             String entryName = zipEntry.getName();
             if(!entryName.startsWith(dirName) || zipEntry.isDirectory()) continue;
-            File zipDestination = new File(destination, entryName.substring(dirNameLen));
+            String relative = entryName.substring(dirNameLen);
+            File target = new File(root, relative).getCanonicalFile();
+            if (relative.startsWith("/") || relative.contains("\\") || !target.getPath().startsWith(rootPrefix)) {
+                throw new IOException("Archive entry escapes the import directory: " + entryName);
+            }
+            outputs.put(zipEntry, target);
+        }
+        // Validate the entire matching archive before writing any imported file.
+        for (Map.Entry<ZipEntry, File> output : outputs.entrySet()) {
+            File zipDestination = output.getValue();
             FileUtils.ensureParentDirectory(zipDestination);
-            try (InputStream inputStream = zipFile.getInputStream(zipEntry);
+            try (InputStream inputStream = zipFile.getInputStream(output.getKey());
                  OutputStream outputStream = new FileOutputStream(zipDestination)) {
                 IOUtils.copy(inputStream, outputStream);
             }

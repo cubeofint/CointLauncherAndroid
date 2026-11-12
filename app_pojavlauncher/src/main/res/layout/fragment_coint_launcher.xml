@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:background="@color/background_app">
+
+    <ScrollView android:layout_width="match_parent" android:layout_height="0dp"
+        android:layout_weight="1" android:fillViewport="true">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:padding="24dp">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="@string/coint_title" android:textColor="#00D4AD"
+                android:textSize="32sp" android:textStyle="bold" android:letterSpacing="0.16" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="4dp" android:layout_marginBottom="24dp"
+                android:text="@string/coint_subtitle" android:textColor="#A4B9C8" android:textSize="14sp" />
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:background="@drawable/coint_card">
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="@string/coint_gtnh_title" android:textColor="#FFFFFF"
+                    android:textSize="22sp" android:textStyle="bold" />
+                <TextView android:id="@+id/coint_pack_status" android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:layout_marginTop="10dp"
+                    android:text="@string/coint_pack_missing" android:textColor="#A4B9C8"
+                    android:textSize="14sp" android:lineSpacingExtra="3dp" />
+                <Button android:id="@+id/install_jar_button" android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:layout_marginTop="16dp"
+                    android:minHeight="52dp" android:text="@string/coint_import_pack"
+                    android:textAllCaps="false" android:textColor="#041B17"
+                    android:backgroundTint="#00D4AD" />
+            </LinearLayout>
+
+            <Button android:id="@+id/news_button" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:layout_marginTop="20dp"
+                android:minHeight="48dp" android:text="@string/coint_java" android:textAllCaps="false" />
+            <Button android:id="@+id/custom_control_button" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:minHeight="48dp"
+                android:text="@string/coint_controls" android:textAllCaps="false" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                <Button android:id="@+id/share_logs_button" android:layout_width="0dp"
+                    android:layout_weight="1" android:layout_height="wrap_content" android:minHeight="48dp"
+                    android:text="@string/coint_logs" android:textAllCaps="false" />
+                <Button android:id="@+id/open_files_button" android:layout_width="0dp"
+                    android:layout_weight="1" android:layout_height="wrap_content" android:minHeight="48dp"
+                    android:text="@string/coint_files" android:textAllCaps="false" />
+            </LinearLayout>
+            <Button android:id="@+id/discord_button" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:minHeight="48dp"
+                android:text="@string/coint_about" android:textAllCaps="false" />
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:padding="16dp"
+        android:background="@color/background_bottom_bar">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:gravity="center_vertical" android:layout_marginBottom="12dp">
+            <com.kdt.mcgui.mcVersionSpinner android:id="@+id/mc_version_spinner"
+                android:layout_width="0dp" android:layout_weight="1" android:layout_height="52dp"
+                android:gravity="center_vertical" android:background="@android:color/transparent"
+                android:textColor="#FFFFFF" android:drawableEnd="@drawable/spinner_arrow"
+                app:drawableEndSize="20dp" app:drawableStartIntegerScaling="true"
+                app:drawableStartSize="32dp" app:drawableEndPadding="4dp" />
+            <ImageButton android:id="@+id/edit_profile_button" android:layout_width="48dp"
+                android:layout_height="48dp" android:src="@drawable/ic_edit_profile"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@string/coint_profile_settings" />
+        </LinearLayout>
+        <Button android:id="@+id/play_button" android:layout_width="match_parent"
+            android:layout_height="56dp" android:text="@string/coint_play"
+            android:textSize="20sp" android:textAllCaps="false"
+            android:textColor="#041B17" android:backgroundTint="#00D4AD" />
+    </LinearLayout>
+</LinearLayout>

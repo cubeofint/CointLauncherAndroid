@@ -161,10 +161,17 @@ public class ModpackInstaller {
         if (!modpackMcVersion.isBlank()) profile.lastVersionId = modpackMcVersion;
         if (modLoaderInfo != null && modLoaderInfo.getVersionId() != null)
             profile.lastVersionId = modLoaderInfo.getVersionId();
-        LauncherProfiles.mainProfileJson.profiles.put(profileFolderName, profile);
+        boolean preparedGtnh = net.kdt.pojavlaunch.coint.CointBootstrap.prepareGtnh(profile);
+        String profileKey = LauncherProfiles.getFreeProfileKey();
+        LauncherProfiles.mainProfileJson.profiles.put(profileKey, profile);
         LauncherProfiles.write();
 
-        return modLoaderInfo;
+        net.kdt.pojavlaunch.prefs.LauncherPreferences.DEFAULT_PREF.edit()
+                .putString(net.kdt.pojavlaunch.prefs.LauncherPreferences.PREF_KEY_CURRENT_PROFILE, profileKey).apply();
+
+        // LWJGL3ify carries its own complete launch profile. Do not open the old
+        // graphical Forge installer before the launcher can download that profile.
+        return preparedGtnh ? null : modLoaderInfo;
 }
 
 interface InstallFunction {
